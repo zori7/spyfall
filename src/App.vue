@@ -58,6 +58,9 @@ body {
   text-align: center;
   font-family: 'Open Sans', sans-serif;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 .page-enter-active, .page-leave-active {
   transition: opacity .3s, transform .3s ease;
 }

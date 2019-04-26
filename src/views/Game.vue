@@ -22,7 +22,7 @@
 			</transition>
 		</div>
 		<div v-if="playing && remains">
-			Осталось {{ remains.mins !== 0 ? remains.mins + ' минут, ' : '' }} {{ remains.secs + ' секунд' }}
+			Осталось {{ remains.mins > 0 ? remains.mins + ' минут' : remains.secs + ' Секунд' }}
 		</div>
 	</div>
 </template>
