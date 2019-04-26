@@ -22,8 +22,11 @@
 			</transition>
 		</div>
 		<div v-if="playing && remains">
-			Осталось {{ remains.mins > 0 ? remains.mins + ' минут' : remains.secs + ' Секунд' }}
+			<el-progress type="circle" :width="200" :percentage="remainsPercentage" status="text">
+				{{ remains.mins > 0 ? remains.mins + ' минут' : remains.secs + ' Секунд' }}
+			</el-progress>
 		</div>
+		<audio preload="auto" :src="require('../assets/golosovanie.wav')" id="cheering"></audio>
 	</div>
 </template>
 
@@ -32,21 +35,11 @@
 		name: 'game',
 		data: function () {
 			return {
+				width: 200,
 				loading: false,
 				distribution: false,
 				playing: false,
-				locations: [
-				'База террористов',
-				'Банк',
-				'Больница',
-				'Киностудия',
-				'Корпоративная вечеринка',
-				'Овощебаза',
-				'Пассажирский поезд',
-				'Пиратский корабль',
-				'Ресторан',
-				'Супермаркет'
-				],
+				locations: null,
 				playersCount: 5,
 				timerMins: 5,
 				location: null,
@@ -74,12 +67,23 @@
 					mins: mins,
 					secs: secs
 				}
+			},
+			remainsPercentage () {
+				let perc = this.remains.secs * 100 / (this.timerMins * 60);
+				return perc;
 			}
 		},
 		watch: {
 			now () {
 				if (this.now !== null && this.endTime !== null) {
 					if (this.now.isAfter(this.endTime)) {
+						const audio = document.getElementById('cheering');
+						audio.currentTime = 0;
+						audio.play();
+						this.$message({
+							type: 'success',
+							message: 'Время голосования!'
+						});
 						clearInterval(this.interval);
 						this.interval = null;
 						this.timer = {
@@ -97,9 +101,14 @@
 			}
 		},
 		mounted () {
-			// console.log(moment().format());
+			this.update();
 		},
 		methods: {
+			update () {
+				this.kvGet('locations').then(res => {
+					this.locations = res;
+				});
+			},
 			startGame () {
 				let spy = this.getRandomInt(0, this.playersCount);
 				this.spy = spy;
