@@ -13,11 +13,15 @@
 		</div>
 		<div v-if="distribution">
 			<transition name="flip" mode="out-in">
-				<div key="1" class="player-card cursor-pointer" v-if="cardVisible" @click="passMove">
-					Ваша карта: {{ cards[currentCardNumber].isSpy ? 'Вы - шпион!' : this.location }}
+				<div key="1" class="player-card cursor-pointer d-flex align-items-center justify-content-center" :class="{ spy: cards[currentCardNumber].isSpy, bg: !cards[currentCardNumber].isSpy }" v-if="cardVisible" @click="passMove">
+					<div class="text-center text-white pt-4" style="font-size: 2em">
+						{{ cards[currentCardNumber].isSpy ? 'Вы - шпион!' : this.location }}
+					</div>
 				</div>
-				<div key="2" class="player-card cursor-pointer" v-else @click="showCard">
-					<p>Показать...</p>
+				<div key="2" class="player-card cursor-pointer bg d-flex align-items-center justify-content-center" v-else @click="showCard">
+					<div class="text-center text-white pt-4" style="font-size: 2em">
+						Переверните карту
+					</div>
 				</div>
 			</transition>
 		</div>
@@ -163,5 +167,17 @@
 }
 .cursor-pointer {
 	cursor: pointer;
+}
+.bg {
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background: url('../assets/bg.jpeg');
+}
+.spy {
+	background: url('../assets/spy.jpg');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 </style>
